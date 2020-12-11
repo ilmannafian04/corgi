@@ -1,5 +1,8 @@
+use std::env;
+
 use actix_files::Files;
 use actix_web::{get, web, App, HttpResponse, HttpServer};
+use dotenv::dotenv;
 use handlebars::Handlebars;
 
 mod api;
@@ -12,11 +15,14 @@ async fn ping() -> HttpResponse {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    dotenv().ok();
+
     let mut handlebars = Handlebars::new();
     handlebars
         .register_templates_directory(".html", "./template")
         .unwrap();
     let hb_ref = web::Data::new(handlebars);
+
     HttpServer::new(move || {
         App::new()
             .service(ping)
@@ -24,7 +30,7 @@ async fn main() -> std::io::Result<()> {
             .service(Files::new("/static", "./static"))
             .app_data(hb_ref.clone())
     })
-    .bind("127.0.0.1:8000")?
+    .bind(format!("{}:{}", env::var("HOST").expect("HOST not set"), env::var("PORT").expect("PORT not set")))?
     .run()
     .await
 }
