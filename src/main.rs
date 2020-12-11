@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate log;
+
 use std::env;
 
 use actix_files::Files;
@@ -16,6 +19,8 @@ async fn ping() -> HttpResponse {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
+    env_logger::init();
+    info!("Starting server");
 
     let mut handlebars = Handlebars::new();
     handlebars
