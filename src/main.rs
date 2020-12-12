@@ -1,12 +1,11 @@
 use std::env;
 
 use actix_files::Files;
-use actix_web::{middleware::Logger, web, App, HttpServer};
-use diesel::r2d2;
-use diesel::PgConnection;
+use actix_web::{middleware::Logger, App, HttpServer};
+use diesel::{r2d2, PgConnection};
 use dotenv::dotenv;
-use handlebars::Handlebars;
 use log::info;
+use tera::Tera;
 
 mod controller;
 mod route;
@@ -17,22 +16,20 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
     info!("Starting server");
 
-    let mut handlebars = Handlebars::new();
-    handlebars
-        .register_templates_directory(".html", "./template")
-        .unwrap();
-    let hb_ref = web::Data::new(handlebars);
+    let tera = Tera::new(concat!(env!("CARGO_MANIFEST_DIR"), "/template/**/*")).unwrap();
 
-    let pool = r2d2::Pool::builder().build(r2d2::ConnectionManager::<PgConnection>::new(
-        env::var("DATABASE_URL").expect("DATABASE_URL not set"),
-    )).expect("Failed to create pool");
+    let pool = r2d2::Pool::builder()
+        .build(r2d2::ConnectionManager::<PgConnection>::new(
+            env::var("DATABASE_URL").expect("DATABASE_URL not set"),
+        ))
+        .expect("Failed to create pool");
 
     HttpServer::new(move || {
         App::new()
             .configure(route::route_cfg)
             .service(Files::new("/static", "./static"))
-            .app_data(hb_ref.clone())
             .data(pool.clone())
+            .data(tera.clone())
             .wrap(Logger::default())
     })
     .bind(format!(

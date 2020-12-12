@@ -1,13 +1,13 @@
 use actix_files::NamedFile;
 use actix_web::{web, Error, HttpResponse};
-use handlebars::Handlebars;
 
 pub async fn ping() -> HttpResponse {
     HttpResponse::Ok().body("pong")
 }
 
-pub async fn index(hb: web::Data<Handlebars<'_>>) -> HttpResponse {
-    HttpResponse::Ok().body(hb.render("index", &()).unwrap())
+pub async fn index(tmpl: web::Data<tera::Tera>) -> HttpResponse {
+    let body = tmpl.render("index.html", &tera::Context::new()).unwrap();
+    HttpResponse::Ok().body(body)
 }
 
 pub async fn favicon() -> Result<NamedFile, Error> {
