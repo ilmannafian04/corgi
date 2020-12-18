@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate diesel;
+
 use std::env;
 
 use actix_files::Files;
@@ -8,7 +11,9 @@ use log::info;
 use tera::Tera;
 
 mod controller;
+mod models;
 mod route;
+mod schema;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
