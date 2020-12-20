@@ -1,9 +1,10 @@
 use chrono::NaiveDateTime;
-use diesel::Queryable;
 
-#[derive(Queryable)]
+use crate::schema::links;
+
+#[derive(Insertable, Queryable)]
 pub struct Link {
     pub id: String,
     pub original: String,
-    pub created_date: NaiveDateTime,
+    pub created_at: NaiveDateTime,
 }

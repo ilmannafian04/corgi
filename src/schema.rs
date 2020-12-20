@@ -1,5 +1,5 @@
 table! {
-    link (id) {
+    links (id) {
         id -> Bpchar,
         original -> Text,
         created_at -> Timestamp,
