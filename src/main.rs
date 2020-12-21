@@ -5,7 +5,10 @@ use std::env;
 
 use actix_files::Files;
 use actix_web::{middleware::Logger, App, HttpServer};
-use diesel::{r2d2, PgConnection};
+use diesel::{
+    r2d2::{ConnectionManager, Pool},
+    PgConnection,
+};
 use dotenv::dotenv;
 use log::info;
 use tera::Tera;
@@ -23,8 +26,8 @@ async fn main() -> std::io::Result<()> {
 
     let tera = Tera::new(concat!(env!("CARGO_MANIFEST_DIR"), "/template/**/*")).unwrap();
 
-    let pool = r2d2::Pool::builder()
-        .build(r2d2::ConnectionManager::<PgConnection>::new(
+    let pool = Pool::builder()
+        .build(ConnectionManager::<PgConnection>::new(
             env::var("DATABASE_URL").expect("DATABASE_URL not set"),
         ))
         .expect("Failed to create pool");
