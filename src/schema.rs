@@ -1,6 +1,7 @@
 table! {
     links (id) {
-        id -> Bpchar,
+        id -> Int4,
+        shortened -> Varchar,
         original -> Text,
         created_at -> Timestamp,
     }

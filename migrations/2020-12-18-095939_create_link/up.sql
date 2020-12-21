@@ -1,5 +1,6 @@
 CREATE TABLE links (
-    id CHAR NOT NULL PRIMARY KEY,
+    id serial NOT NULL PRIMARY KEY,
+    shortened VARCHAR NOT NULL UNIQUE,
     original TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL
 )
