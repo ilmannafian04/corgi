@@ -1,5 +1,5 @@
 use chrono::NaiveDateTime;
-use diesel::{debug_query, prelude::*, PgConnection, QueryResult};
+use diesel::{insert_into, prelude::*, PgConnection, QueryResult};
 
 use crate::schema::links::{self, dsl::links as all_links};
 
@@ -16,7 +16,6 @@ pub struct Link {
 pub struct NewLink {
     pub shortened: String,
     pub original: String,
-    pub created_at: NaiveDateTime,
 }
 
 impl Link {
@@ -25,8 +24,6 @@ impl Link {
     }
 
     pub fn insert_link(conn: &PgConnection, new_link: &NewLink) -> QueryResult<Link> {
-        let q = diesel::insert_into(links::table).values(new_link);
-        println!("{}", debug_query(&q));
-        q.get_result(conn)
+        insert_into(links::table).values(new_link).get_result(conn)
     }
 }
