@@ -1,6 +1,15 @@
 {% extends "partial/base.html" %}
 {% block body %}
 <div style="display: flex; justify-content: center; align-items: center; flex-grow: 1; flex-direction: column;">
-    <h1>Shorten</h1>
+    <h1>Shorten succesful</h1>
+    <a href="/{{ shortened }}">
+        <h1 id="host-part">
+            /{{ shortened }}
+        </h1>
+    </a>
+    <script>
+        const hostEl = document.getElementById("host-part");
+        hostEl.innerHTML = `${window.location.origin}${hostEl.innerText}`
+    </script>
 </div>
 {% endblock body %}

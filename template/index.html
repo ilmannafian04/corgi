@@ -2,9 +2,9 @@
 {% block body %}
 <div style="display: flex; justify-content: center; align-items: center; flex-grow: 1; flex-direction: column;">
     <h1>Corgi</h1>
-    <form class="row row-cols-lg-auto g-3">
+    <form class="row row-cols-lg-auto g-3" action="/shorten" method="POST">
         <div class="col-12">
-            <input type="text" name="url" class="form-control" placeholder="URL" />
+            <input type="text" name="link" class="form-control" placeholder="URL" />
         </div>
         <div class="col-12">
             <button type="submit" class="btn btn-primary">Shorten</button>

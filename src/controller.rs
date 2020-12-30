@@ -46,8 +46,9 @@ pub async fn shorten(
     let link = web::block(move || Link::insert_link(&conn, &new_link)).await;
     match link {
         Ok(link) => {
-            let body = tmpl.render("shorten.html", &tera::Context::new()).unwrap();
-            HttpResponse::Ok().body(body)
+            let mut ctx = tera::Context::new();
+            ctx.insert("shortened", &link.shortened);
+            HttpResponse::Ok().body(tmpl.render("shorten.html", &ctx).unwrap())
         }
         Err(e) => HttpResponse::NotFound().body(format!("{}", e)),
     }
