@@ -52,3 +52,15 @@ pub async fn shorten(
         Err(e) => HttpResponse::NotFound().body(format!("{}", e)),
     }
 }
+
+pub async fn visit(pool: web::Data<DbPool>, path: web::Path<String>) -> HttpResponse {
+    match pool.get() {
+        Ok(conn) => match web::block(move || Link::get_link_by_shortened(&conn, &path)).await {
+            Ok(link) => HttpResponse::TemporaryRedirect()
+                .header("Location", link.original)
+                .finish(),
+            Err(_) => HttpResponse::NotFound().finish(),
+        },
+        Err(e) => HttpResponse::InternalServerError().body(format!("{}", e)),
+    }
+}

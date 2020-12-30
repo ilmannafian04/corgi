@@ -8,6 +8,7 @@ pub fn route_cfg(cfg: &mut web::ServiceConfig) {
             web::scope("")
                 .route("/shorten", web::post().to(c::shorten))
                 .route("/favicon.ico", web::get().to(c::favicon))
+                .route("/{id}", web::get().to(c::visit))
                 .route("/", web::get().to(c::index)),
         );
 }
